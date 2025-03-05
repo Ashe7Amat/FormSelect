@@ -119,19 +119,25 @@ app.post('/forms', async (req, res) => {
  *     tags: [Formularios]
  *     responses:
  *       200:
- *         description: Lista de todos los formularios
+ *         description: Lista de todos los formularios con su ID
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Formulario'
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   formId:
+ *                     type: string
  *       500:
  *         description: Error del servidor
  */
 app.get('/forms', async (req, res) => {
   try {
-    const allForms = await Formulario.find().sort({ createdAt: -1 });
+    // Modificado para solo devolver _id y formId
+    const allForms = await Formulario.find().select('_id formId').sort({ createdAt: -1 });
     res.status(200).json(allForms);
   } catch (error) {
     console.error("Error al obtener los formularios:", error);
